@@ -1,8 +1,8 @@
 import 'package:product_listing/core/model_to_entity_mapper/mapper.dart';
-import 'package:product_listing/feature/user_details/domain/entity/create_user_request_entity.dart';
+import 'package:product_listing/feature/user_details/domain/entity/update_user_request_entity.dart';
 
-class CreateUserRequestModel
-    extends Mapper<CreateUserRequestEntity, CreateUserRequestModel> {
+class UpdateUserRequestModel
+    extends Mapper<UpdateUserRequestEntity, UpdateUserRequestModel> {
   String? id;
 
   String? name;
@@ -10,7 +10,7 @@ class CreateUserRequestModel
   String? startDate;
   String? endDate;
 
-  CreateUserRequestModel({
+  UpdateUserRequestModel({
     this.id,
     this.name,
     this.role,
@@ -18,7 +18,7 @@ class CreateUserRequestModel
     this.endDate,
   });
 
-  CreateUserRequestModel.fromJson(Map<String, dynamic> json) {
+  UpdateUserRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     role = json['role'];
@@ -28,7 +28,6 @@ class CreateUserRequestModel
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
     data['name'] = this.name;
     data['role'] = this.role;
     data['start-date'] = this.startDate;
@@ -38,8 +37,8 @@ class CreateUserRequestModel
   }
 
   @override
-  CreateUserRequestModel call(CreateUserRequestEntity object) {
-    return CreateUserRequestModel(
+  UpdateUserRequestModel call(UpdateUserRequestEntity object) {
+    return UpdateUserRequestModel(
       id: object.id,
       name: object.name,
       role: object.role,

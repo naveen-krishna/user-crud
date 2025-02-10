@@ -9,15 +9,8 @@ class LoadingState extends UserDetailsState {}
 
 class UserCreatedState extends UserDetailsState {}
 
-class UserUpdatedState extends UserDetailsState {
-  final List<UserEntity>? users;
-  UserUpdatedState({required this.users});
-}
+class UserUpdatedState extends UserDetailsState {}
 
 class CreateErrorState extends UserDetailsState {}
 
-class UpdateErrorState extends UserDetailsState {
-  final ApiFailureModel apiFailureModel;
-
-  UpdateErrorState({required this.apiFailureModel});
-}
+class UpdateErrorState extends UserDetailsState {}

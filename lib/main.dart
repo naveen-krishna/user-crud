@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:product_listing/core/di/injection_container.dart';
-import 'package:product_listing/feature/home/presentation/view/home_page.dart';
+import 'package:product_listing/feature/home/presentation/view/user_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -20,11 +21,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.lightBlue,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.lightBlue,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const UserListPage(),
     );
   }
 }

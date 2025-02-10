@@ -12,7 +12,7 @@ class InitUserEvent extends UserDetailsEvent {
 class CreateUserEvent extends UserDetailsEvent {}
 
 class UpdateUserEvent extends UserDetailsEvent {
-  final UserEntity user;
+  final String userId;
 
-  UpdateUserEvent({required this.user});
+  UpdateUserEvent({required this.userId});
 }

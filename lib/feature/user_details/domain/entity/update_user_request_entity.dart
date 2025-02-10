@@ -1,4 +1,4 @@
-class CreateUserRequestEntity {
+class UpdateUserRequestEntity {
   String? id;
 
   String? name;
@@ -6,7 +6,7 @@ class CreateUserRequestEntity {
   String? startDate;
   String? endDate;
 
-  CreateUserRequestEntity({
+  UpdateUserRequestEntity({
     this.id,
     this.name,
     this.role,
@@ -14,7 +14,7 @@ class CreateUserRequestEntity {
     this.endDate,
   });
 
-  CreateUserRequestEntity.fromJson(Map<String, dynamic> json) {
+  UpdateUserRequestEntity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     role = json['role'];
@@ -25,7 +25,6 @@ class CreateUserRequestEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data['id'] = this.id;
     data['name'] = this.name;
     data['role'] = this.role;
     data['start-date'] = this.startDate;

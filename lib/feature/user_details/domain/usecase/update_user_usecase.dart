@@ -1,18 +1,16 @@
-// import 'package:dartz/dartz.dart';
-// import 'package:product_listing/core/models/api_failure_model.dart';
-// import 'package:product_listing/core/models/no_param_model.dart';
-// import 'package:product_listing/core/usecase/usecase.dart';
-// import 'package:product_listing/feature/home/domain/entities/user_entity.dart';
-// import 'package:product_listing/feature/home/domain/repository/user_repository.dart';
-// import 'package:product_listing/feature/user_details/data/data_source/user_details_data_source_repository.dart';
+import 'package:dartz/dartz.dart';
+import 'package:product_listing/core/models/api_failure_model.dart';
+import 'package:product_listing/core/usecase/usecase.dart';
+import 'package:product_listing/feature/user_details/domain/entity/update_user_request_entity.dart';
+import 'package:product_listing/feature/user_details/domain/repository/user_details_repository.dart';
 
-// class UpdateUsersDataUsecase
-//     extends Usecase<Either<ApiFailureModel, UserEntity>, NoParamsModel> {
-//   final UserDetailsDataSourceRepository userDetailsRepository;
+class UpdateUsersDataUsecase
+    extends Usecase<Either<ApiFailureModel, bool>, UpdateUserRequestEntity> {
+  final UserDetailsRepository userDetailsRepository;
 
-//   UserDetailsDataSourceRepository(this.userDetailsRepository);
-//   @override
-//   Future<Either<ApiFailureModel, UserEntity>> call(
-//           NoParamsModel params) async =>
-//       userDetailsRepository.updateUser(params: params);
-// }
+  UpdateUsersDataUsecase(this.userDetailsRepository);
+  @override
+  Future<Either<ApiFailureModel, bool>> call(
+          UpdateUserRequestEntity params) async =>
+      userDetailsRepository.updateUser(params: params);
+}

@@ -4,14 +4,14 @@ import 'package:product_listing/core/di/injection_container.dart';
 import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:product_listing/feature/home/presentation/view/user_list_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class UserListPage extends StatefulWidget {
+  const UserListPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<UserListPage> createState() => _UserListPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _UserListPageState extends State<UserListPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
           child: BlocProvider(
             create: (context) => HomeBloc(
               getUsersDataUsecase: sl(),
+              deleteUserDataUsecase: sl(),
             ),
             child: const UserListScreen(),
           ),

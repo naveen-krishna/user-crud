@@ -1,16 +1,15 @@
 import 'package:dartz/dartz.dart';
-import 'package:product_listing/core/base/base_exception.dart';
 import 'package:product_listing/core/models/api_failure_model.dart';
 import 'package:product_listing/core/models/no_param_model.dart';
-import 'package:product_listing/feature/home/data/data_source/user_data_source_repository.dart';
-import 'package:product_listing/feature/home/data/models/product_model.dart';
+import 'package:product_listing/feature/home/data/data_source/user_data_source.dart';
+import 'package:product_listing/feature/home/data/models/delete_user_request_model.dart';
 import 'package:product_listing/feature/home/data/models/user_model.dart';
-import 'package:product_listing/feature/home/domain/entities/product_entity.dart';
+import 'package:product_listing/feature/home/domain/entities/delete_user_request_entity.dart';
 import 'package:product_listing/feature/home/domain/entities/user_entity.dart';
 import 'package:product_listing/feature/home/domain/repository/user_repository.dart';
 
 class UserRepositoryImpl extends UserRepository {
-  final UserDataSourceRepository userDataSourceRepository;
+  final UserDataSource userDataSourceRepository;
 
   UserRepositoryImpl({required this.userDataSourceRepository});
 
@@ -34,31 +33,14 @@ class UserRepositoryImpl extends UserRepository {
     return Right(userListEntity);
   }
 
-  // @override
-  // Future<Either<ApiFailureModel, String>> createUser(
-  //     {required NoParamsModel params}) async {
-  //   final result = await userDataSourceRepository.createUser(params: params);
+  @override
+  Future<Either<ApiFailureModel, bool>> deleteUser({required params}) =>
+      baseMethodExceptions(() => deleteUserApi(params: params));
 
-  //   return Right(result);
-  // }
-
-  // @override
-  // Future<Either<ApiFailureModel, bool>> deleteUser(
-  //     {required NoParamsModel params}) async {
-  //   bool result = await userDataSourceRepository.deleteUser(params: params);
-
-  //   return Right(result);
-  // }
-
-  // @override
-  // Future<Either<ApiFailureModel, UserEntity>> updateUser(
-  //     {required NoParamsModel params}) async {
-  //   final userModel =
-  //       await userDataSourceRepository.updateUser(params: params);
-
-  //   UserEntity entity = UserEntity();
-  //   entity(userModel);
-
-  //   return Right(entity);
-  // }
+  Future<Either<ApiFailureModel, bool>> deleteUserApi(
+      {required DeleteUserRequestEntity params}) async {
+    DeleteUserRequestModel deleteUserRequestModel = DeleteUserRequestModel();
+    return Right(await userDataSourceRepository.deleteUser(
+        params: deleteUserRequestModel(params)));
+  }
 }
