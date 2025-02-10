@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
-import 'package:product_listing/feature/home/presentation/view/user_details.dart';
-import 'package:product_listing/feature/home/presentation/widget/date_picker_textfield.dart';
+import 'package:product_listing/feature/user_details/presentation/view/user_details_page.dart';
+import 'package:product_listing/feature/user_details/presentation/view/user_details_screen.dart';
+import 'package:product_listing/feature/user_details/presentation/widget/date_picker_textfield.dart';
 import 'package:product_listing/feature/home/presentation/widget/loading_widget.dart';
 import 'package:product_listing/feature/home/presentation/widget/user_card.dart';
 
@@ -26,13 +28,15 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
+          onPressed: () async {
+            await Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => UserDetailsScreen(product: null)),
+                  builder: (context) => const UserDetailsPage(user: null)),
             );
+
+            getBloc.add(FetchProductsEvent());
           },
-          icon: Icon(Icons.add)),
+          icon: const Icon(Icons.add)),
       appBar: AppBar(
         title: const Text('Product List'),
       ),
@@ -43,23 +47,61 @@ class _UserListScreenState extends State<UserListScreen> {
             return const LoadingWidget();
           }
           if (state is FetchProductsState) {
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.products?.length,
-                itemBuilder: (context, index) {
-                  final product = state.products?[index];
+            if (state.users?.isNotEmpty ?? false) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.users?.length,
+                  itemBuilder: (context, index) {
+                    final user = state.users?[index];
 
-                  return UserCard(
-                    product: product,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                UserDetailsScreen(product: product)),
-                      );
-                    },
-                  );
-                });
+                    return Dismissible(
+                      // Each Dismissible must contain a Key. Keys allow Flutter to
+                      // uniquely identify widgets.
+                      key: Key(user?.id ?? ""),
+                      // Provide a function that tells the app
+                      // what to do after an item has been swiped away.
+                      onDismissed: (direction) async {
+                        // Remove the item from the data source.
+
+                        final db = FirebaseFirestore.instance;
+
+                        await db
+                            .collection("users")
+                            .doc('${user?.id}')
+                            .delete();
+
+                        // Then show a snackbar.
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${user?.name} deleted')));
+                      },
+
+                      background: Container(
+                        color: Colors.red,
+                        child: const Align(
+                            alignment: Alignment.centerRight,
+                            child: Icon(Icons.delete)),
+                      ),
+                      child: UserCard(
+                        user: user,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => UserDetailsPage(
+                                      user: user,
+                                      editing: true,
+                                    )),
+                          );
+                        },
+                      ),
+                    );
+                  });
+            } else {
+              return Column(
+                children: [
+                  Text("No Data"),
+                ],
+              );
+            }
           }
           return Column(
             children: [

@@ -5,8 +5,8 @@ sealed class HomeState {}
 class InitialState extends HomeState {}
 
 class FetchProductsState extends HomeState {
-  List<ProductEntity>? products;
-  FetchProductsState({required this.products});
+  List<UserEntity>? users;
+  FetchProductsState({required this.users});
 }
 
 class LoadingState extends HomeState {}

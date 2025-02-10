@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: BlocProvider(
             create: (context) => HomeBloc(
-              getProductsDataUsecase: sl(),
+              getUsersDataUsecase: sl(),
             ),
             child: const UserListScreen(),
           ),
