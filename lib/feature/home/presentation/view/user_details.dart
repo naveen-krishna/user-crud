@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:product_listing/feature/home/domain/entities/product_entity.dart';
 import 'package:product_listing/feature/home/presentation/widget/date_picker_textfield.dart';
@@ -13,6 +14,8 @@ class UserDetailsScreen extends StatelessWidget {
 
   TextEditingController _roleController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+
+  final db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,18 @@ class UserDetailsScreen extends StatelessWidget {
               child: Text("Cancel"),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Create a new user with a first and last name
+                final user = <String, dynamic>{
+                  "name": _nameController.text,
+                  "role": _roleController.text,
+                  "start-date": dateController.text,
+                  "end-date": dateController.text,
+                };
+// Add a new document with a generated ID
+                db.collection("users").add(user).then((DocumentReference doc) =>
+                    print('DocumentSnapshot added with ID: ${doc.id}'));
+              },
               child: Text("Save"),
             ),
           ],
