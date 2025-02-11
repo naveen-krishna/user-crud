@@ -1,38 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:product_listing/core/models/no_param_model.dart';
 import 'package:product_listing/feature/home/data/data_source/local_user_data_source.dart';
 import 'package:product_listing/feature/home/data/models/user_model.dart';
 
 class LocalUserDataSourceImpl extends LocalUserDataSource {
-  static final db = FirebaseFirestore.instance;
-
   @override
   Future<List<UserModel>> getUserList({required NoParamsModel params}) async {
     try {
-      // todo: implement local getUserList
-      final QuerySnapshot response = await db.collection("users").get();
+      await Hive.openBox<UserModel>('users');
+      Box<UserModel> userBox = Hive.box<UserModel>('users');
 
-      List<UserModel> userList = [];
+      List<UserModel> userList = userBox.values.toList();
 
-      for (var doc in response.docs) {
-        userList.add(
-            UserModel.fromJson(doc.id, doc.data() as Map<String, dynamic>));
-      }
       return userList;
     } catch (e) {
-      print(e);
+      print("${e}");
       return [];
     }
   }
 
   @override
   Future<bool> clearUsers({required NoParamsModel params}) async {
-    // todo: implement local clear data
+    await Hive.openBox<UserModel>('users');
+    Box<UserModel> userBox = Hive.box<UserModel>('users');
 
     try {
-      await db.collection('users');
+      await userBox.clear();
       return true;
     } catch (e) {
+      print("${e}");
+
       return false;
     }
   }
@@ -40,9 +37,15 @@ class LocalUserDataSourceImpl extends LocalUserDataSource {
   @override
   Future cacheUsers({required List<UserModel> users}) async {
     // todo: write to local database
+    await Hive.openBox<UserModel>('users');
+    Box<UserModel> userBox = Hive.box<UserModel>('users');
 
     try {
-      await db.collection('users');
-    } catch (e) {}
+      for (var user in users) {
+        await userBox.add(user);
+      }
+    } catch (e) {
+      print("${e}");
+    }
   }
 }

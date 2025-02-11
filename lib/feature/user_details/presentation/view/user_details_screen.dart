@@ -6,12 +6,13 @@ import 'package:product_listing/core/constants/style_constants.dart';
 import 'package:product_listing/feature/home/domain/entities/user_entity.dart';
 import 'package:product_listing/feature/user_details/presentation/bloc/user_details_bloc.dart';
 import 'package:product_listing/feature/user_details/presentation/widget/date_picker_textfield.dart';
-import 'package:product_listing/feature/user_details/presentation/widget/role_selection_dropdown.dart';
+import 'package:product_listing/feature/user_details/presentation/widget/role_selection_bottomsheet.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   final UserEntity? user;
   final bool editing;
-  UserDetailsScreen({super.key, required this.user, this.editing = false});
+  const UserDetailsScreen(
+      {super.key, required this.user, this.editing = false});
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();
@@ -33,19 +34,33 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     return BlocListener<UserDetailsBloc, UserDetailsState>(
       listener: (context, state) {
         if (state is UserCreatedState || state is UserUpdatedState) {
-          //return result to previous screen true/  false
-          Navigator.pop(context);
+          //return false to previous screen when not deleting
+          Navigator.pop(context, false);
         }
       },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: false,
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.lightBlue,
-          title: const Text('User Details'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
+          title: Text(
+            widget.editing ? 'Edit Employee Details' : 'Add Employee Details',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
           ),
+          actions: [
+            if (widget.editing)
+              IconButton(
+                icon: const Icon(
+                  Icons.delete_outline_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+          ],
         ),
         persistentFooterButtons: [
           Row(
@@ -83,27 +98,62 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 keyboardType: TextInputType.name,
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
-                  labelText: "Full Name",
-                  hintText: "Enter your name",
-                  border: OutlineInputBorder(),
+                  hintText: "Employee name",
+                  prefixIcon: const Icon(
+                    Icons.person_outlined,
+                    color: AppColors.color_1DA1F2,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+                  ),
                 ),
                 onChanged: (value) {
                   print("Entered Name: $value");
                 },
               ),
               const SizedBox(height: 16.0),
-              RoleSelectionDropdown(
+              RoleSelectionBottomSheet(
                 controller: userDetailsBloc.roleController,
                 onValueSelected: (value) {
                   print("Selected Role: $value");
                 },
               ),
               const SizedBox(height: 16.0),
-              DatePickerTextField(
-                controller: userDetailsBloc.dateController,
-                onDateSelected: (date) {
-                  print("Selected Date: ${date.toIso8601String()}");
-                },
+              Row(
+                children: [
+                  Expanded(
+                    child: DatePickerTextField(
+                      controller: userDetailsBloc.dateController,
+                      onDateSelected: (date) {
+                        print("Selected Date: ${date.toIso8601String()}");
+                      },
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.arrow_right_alt,
+                      color: AppColors.color_1DA1F2,
+                    ),
+                  ),
+                  Expanded(
+                    child: DatePickerTextField(
+                      controller: userDetailsBloc.dateController,
+                      onDateSelected: (date) {
+                        print("Selected Date: ${date.toIso8601String()}");
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

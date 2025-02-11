@@ -33,7 +33,10 @@ injectionContainer() {
         localUserDataSource: sl(),
       ));
   sl.registerLazySingleton<UserDetailsRepository>(
-      () => UserDetailsRepositoryImpl(dataSource: sl()));
+      () => UserDetailsRepositoryImpl(
+            dataSource: sl(),
+            localDataSource: sl(),
+          ));
 
   sl.registerLazySingleton(() => GetUsersDataUsecase(sl()));
   sl.registerLazySingleton(() => CreateUsersDataUsecase(sl()));

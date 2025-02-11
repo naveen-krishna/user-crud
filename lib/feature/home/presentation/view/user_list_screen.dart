@@ -37,7 +37,14 @@ class _UserListScreenState extends State<UserListScreen> {
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         centerTitle: false,
-        title: const Text('Employee List'),
+        title: const Text(
+          'Employee List',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
@@ -79,7 +86,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           child: UserCard(
                             user: user,
                             onTap: () async {
-                              await Navigator.of(context).push(
+                              final delete = await Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => UserDetailsPage(
                                           user: user,
@@ -87,22 +94,25 @@ class _UserListScreenState extends State<UserListScreen> {
                                         )),
                               );
 
-                              getBloc.add(FetchUsersEvent());
+                              if (delete == true) {
+                                getBloc.add(
+                                    DeleteUserEvent(userId: user?.id ?? ""));
+                              } else {
+                                getBloc.add(FetchUsersEvent());
+                              }
                             },
                           ),
                         );
                       });
                 } else {
-                  return Column(
-                    children: [
-                      Text("No Data"),
-                    ],
+                  return const Center(
+                    child: Image(image: AssetImage('assets/no_record.png')),
                   );
                 }
               }
-              return Column(
+              return const Column(
                 children: [
-                  Text("Error"),
+                  Text("Somthing went wrong!"),
                 ],
               );
             },

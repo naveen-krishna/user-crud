@@ -5,6 +5,7 @@ import 'package:product_listing/core/constants/style_constants.dart';
 
 class DatePickerTextField extends StatefulWidget {
   final TextEditingController controller;
+
   final Function(DateTime)? onDateSelected;
 
   const DatePickerTextField({
@@ -188,10 +189,24 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       controller: widget.controller,
       readOnly: true,
       onTap: () => _selectDate(context),
-      decoration: const InputDecoration(
-        suffixIcon: Icon(Icons.calendar_today),
+      decoration: InputDecoration(
+        prefixIcon: const Icon(
+          Icons.today_outlined,
+          color: AppColors.color_1DA1F2,
+        ),
         hintText: "Select Date",
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(color: AppColors.color_E5E5E5),
+        ),
       ),
     );
   }

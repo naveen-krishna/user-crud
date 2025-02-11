@@ -39,8 +39,10 @@ class UserRepositoryImpl extends UserRepository {
 
       return Right(userListEntity);
     }
+
     userModelList = await firebaseUserDataSource.getUserList(params: params);
-    if (userModelList.isEmpty) {
+
+    if (userModelList.isNotEmpty) {
       await localUserDataSource.cacheUsers(users: userModelList);
 
       userListEntity = userModelList.map((model) {
@@ -59,7 +61,13 @@ class UserRepositoryImpl extends UserRepository {
   Future<Either<ApiFailureModel, bool>> deleteUserApi(
       {required DeleteUserRequestEntity params}) async {
     DeleteUserRequestModel deleteUserRequestModel = DeleteUserRequestModel();
-    return Right(await firebaseUserDataSource.deleteUser(
-        params: deleteUserRequestModel(params)));
+
+    final result = await firebaseUserDataSource.deleteUser(
+        params: deleteUserRequestModel(params));
+
+    if (result) {
+      await localUserDataSource.clearUsers(params: NoParamsModel());
+    }
+    return Right(result);
   }
 }

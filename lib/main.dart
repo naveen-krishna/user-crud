@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:product_listing/core/di/injection_container.dart';
+import 'package:product_listing/feature/home/data/models/user_model.dart';
 import 'package:product_listing/feature/home/presentation/view/user_list_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -11,6 +12,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserModelAdapter());
 
   runApp(const MyApp());
 }
