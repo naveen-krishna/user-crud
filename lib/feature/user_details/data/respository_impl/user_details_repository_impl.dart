@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:product_listing/core/models/api_failure_model.dart';
-import 'package:product_listing/feature/user_details/data/data_source/user_details_data_source.dart';
+import 'package:product_listing/feature/user_details/data/data_source/firebase_user_details_data_source.dart';
 import 'package:product_listing/feature/user_details/data/models/create_user_request_model.dart';
 import 'package:product_listing/feature/home/data/models/delete_user_request_model.dart';
 import 'package:product_listing/feature/user_details/data/models/update_user_request_model.dart';
@@ -10,7 +10,7 @@ import 'package:product_listing/feature/user_details/domain/entity/update_user_r
 import 'package:product_listing/feature/user_details/domain/repository/user_details_repository.dart';
 
 class UserDetailsRepositoryImpl extends UserDetailsRepository {
-  final UserDetailsDataSource dataSource;
+  final FirebaseUserDetailsDataSource dataSource;
 
   UserDetailsRepositoryImpl({required this.dataSource});
 

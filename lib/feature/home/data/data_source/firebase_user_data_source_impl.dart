@@ -1,15 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:product_listing/core/models/no_param_model.dart';
-import 'package:product_listing/core/network_repository/network_repository.dart';
-import 'package:product_listing/feature/home/data/data_source/user_data_source.dart';
+import 'package:product_listing/feature/home/data/data_source/firebase_user_data_source.dart';
 import 'package:product_listing/feature/home/data/models/delete_user_request_model.dart';
 import 'package:product_listing/feature/home/data/models/user_model.dart';
 
-class UserDataSourceImpl extends UserDataSource {
-  final NetworkRepository networkRepository;
-
-  UserDataSourceImpl({required this.networkRepository});
-
+class FirebaseUserDataSourceImpl extends FirebaseUserDataSource {
   static final db = FirebaseFirestore.instance;
 
   @override

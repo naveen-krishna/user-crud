@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_listing/core/constants/app_colors.dart';
+import 'package:product_listing/core/constants/style_constants.dart';
 import 'package:product_listing/feature/home/domain/entities/user_entity.dart';
 import 'package:product_listing/feature/user_details/presentation/bloc/user_details_bloc.dart';
 import 'package:product_listing/feature/user_details/presentation/widget/date_picker_textfield.dart';
@@ -53,18 +54,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             children: [
               OutlinedButton(
                 onPressed: () => Navigator.pop(context),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.color_1DA1F2,
-                  backgroundColor: AppColors.color_EDF8FF,
-                  minimumSize: const Size(80, 40),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
-                  ),
-                  side: const BorderSide(
-                    width: 1.0,
-                    color: AppColors.color_EDF8FF,
-                  ),
-                ),
+                style: StyleConstants.secondaryButtonStyle,
                 child: const Text("Cancel"),
               ),
               OutlinedButton(
@@ -76,18 +66,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     userDetailsBloc.add(CreateUserEvent());
                   }
                 },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.color_1DA1F2,
-                  minimumSize: const Size(80, 40),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
-                  ),
-                  side: const BorderSide(
-                    width: 1.0,
-                    color: AppColors.color_EDF8FF,
-                  ),
-                ),
+                style: StyleConstants.primaryButtonStyle,
                 child: const Text('Save'),
               ),
             ],

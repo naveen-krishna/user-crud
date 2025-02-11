@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:product_listing/core/constants/app_colors.dart';
+import 'package:product_listing/core/constants/style_constants.dart';
 
 class DatePickerTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -14,6 +16,8 @@ class DatePickerTextField extends StatefulWidget {
   @override
   _DatePickerTextFieldState createState() => _DatePickerTextFieldState();
 }
+
+String seleted = 'Today';
 
 class _DatePickerTextFieldState extends State<DatePickerTextField> {
   DateTime? _selectedDate;
@@ -31,13 +35,15 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
             GlobalKey calendarKey = GlobalKey();
 
             return Dialog(
+              backgroundColor: Colors.white,
+              insetPadding: const EdgeInsets.all(0),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: SizedBox(
-                width: 350,
+                width: 360,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -66,30 +72,40 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, size: 18),
-                              SizedBox(width: 5),
+                              const Icon(
+                                Icons.calendar_today_outlined,
+                                size: 16,
+                                color: AppColors.color_1DA1F2,
+                              ),
+                              const SizedBox(width: 4),
                               Text(
                                 _selectedDate != null
                                     ? _dateFormat.format(_selectedDate!)
                                     : _dateFormat.format(initialDate),
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              TextButton(
+                              OutlinedButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text("Cancel"),
+                                style: StyleConstants.secondaryButtonStyle,
+                                child: const Text("Cancel"),
                               ),
-                              ElevatedButton(
+                              const SizedBox(width: 12),
+                              OutlinedButton(
                                 onPressed: () {
                                   if (_selectedDate != null) {
                                     _setDate(_selectedDate!);
                                     Navigator.pop(context);
                                   }
                                 },
-                                child: Text("Save"),
+                                style: StyleConstants.primaryButtonStyle,
+                                child: const Text(
+                                  "Save",
+                                  style: TextStyle(fontSize: 14),
+                                ),
                               ),
                             ],
                           ),
@@ -108,16 +124,26 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
 
   Widget _quickSelectButtons(void Function(void Function()) setDialogState,
       VoidCallback forceRebuild) {
-    return Wrap(
+    return Column(
       spacing: 8.0,
       children: [
-        _buildButton("Today", DateTime.now(), setDialogState, forceRebuild),
-        _buildButton("Next Monday", _nextWeekday(DateTime.monday),
-            setDialogState, forceRebuild),
-        _buildButton("Next Tuesday", _nextWeekday(DateTime.tuesday),
-            setDialogState, forceRebuild),
-        _buildButton("After 1 week", DateTime.now().add(Duration(days: 7)),
-            setDialogState, forceRebuild),
+        Row(
+          spacing: 12.0,
+          children: [
+            _buildButton("Today", DateTime.now(), setDialogState, forceRebuild),
+            _buildButton("Next Monday", _nextWeekday(DateTime.monday),
+                setDialogState, forceRebuild),
+          ],
+        ),
+        Row(
+          spacing: 12.0,
+          children: [
+            _buildButton("Next Tuesday", _nextWeekday(DateTime.tuesday),
+                setDialogState, forceRebuild),
+            _buildButton("After 1 week", DateTime.now().add(Duration(days: 7)),
+                setDialogState, forceRebuild),
+          ],
+        ),
       ],
     );
   }
@@ -127,14 +153,20 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       DateTime date,
       void Function(void Function()) setDialogState,
       VoidCallback forceRebuild) {
-    return ElevatedButton(
-      onPressed: () {
-        setDialogState(() {
-          _selectedDate = date;
-          forceRebuild();
-        });
-      },
-      child: Text(text),
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () {
+          seleted = text;
+          setDialogState(() {
+            _selectedDate = date;
+            forceRebuild();
+          });
+        },
+        style: seleted == text
+            ? StyleConstants.primaryButtonStyle
+            : StyleConstants.secondaryButtonStyle,
+        child: Text(text),
+      ),
     );
   }
 
@@ -156,7 +188,7 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       controller: widget.controller,
       readOnly: true,
       onTap: () => _selectDate(context),
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         suffixIcon: Icon(Icons.calendar_today),
         hintText: "Select Date",
         border: OutlineInputBorder(),
