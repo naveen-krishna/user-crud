@@ -74,11 +74,22 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               ),
               OutlinedButton(
                 onPressed: () async {
-                  if (widget.editing) {
-                    userDetailsBloc
-                        .add(UpdateUserEvent(userId: widget.user!.id!));
+                  if (userDetailsBloc.nameController.text.isNotEmpty &&
+                      userDetailsBloc.roleController.text.isNotEmpty) {
+                    if (widget.editing) {
+                      userDetailsBloc
+                          .add(UpdateUserEvent(userId: widget.user!.id!));
+                    } else {
+                      userDetailsBloc.add(CreateUserEvent());
+                    }
                   } else {
-                    userDetailsBloc.add(CreateUserEvent());
+                    if (userDetailsBloc.nameController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please enter name')));
+                    } else if (userDetailsBloc.roleController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please select role')));
+                    }
                   }
                 },
                 style: StyleConstants.primaryButtonStyle,
