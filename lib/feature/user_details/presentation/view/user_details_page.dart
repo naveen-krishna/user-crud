@@ -16,17 +16,14 @@ class UserDetailsPage extends StatelessWidget {
       key: const Key("UserDetailsPageScaffoldGestureDetector"),
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.lightBlue,
-        body: SafeArea(
-          child: BlocProvider(
-            create: (context) => UserDetailsBloc(
-              createUsersDataUsecase: sl(),
-              updateUsersDataUsecase: sl(),
-            ),
-            child: UserDetailsScreen(
-              user: user,
-              editing: editing,
-            ),
+        body: BlocProvider(
+          create: (context) => UserDetailsBloc(
+            createUsersDataUsecase: sl(),
+            updateUsersDataUsecase: sl(),
+          ),
+          child: UserDetailsScreen(
+            user: user,
+            editing: editing,
           ),
         ),
       ),

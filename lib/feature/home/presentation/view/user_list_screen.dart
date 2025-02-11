@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_listing/core/constants/app_colors.dart';
 import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:product_listing/feature/user_details/presentation/view/user_details_page.dart';
 import 'package:product_listing/feature/home/presentation/widget/loading_widget.dart';
@@ -24,7 +25,9 @@ class _UserListScreenState extends State<UserListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: IconButton(
+      floatingActionButton: FloatingActionButton(
+          elevation: 0,
+          backgroundColor: AppColors.color_1DA1F2,
           onPressed: () async {
             await Navigator.of(context).push(
               MaterialPageRoute(
@@ -33,7 +36,10 @@ class _UserListScreenState extends State<UserListScreen> {
 
             getBloc.add(FetchUsersEvent());
           },
-          icon: const Icon(Icons.add)),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         centerTitle: false,
@@ -78,10 +84,14 @@ class _UserListScreenState extends State<UserListScreen> {
                                 content: Text('${user?.name} deleted')));
                           },
                           background: Container(
+                            padding: const EdgeInsets.all(24),
                             color: Colors.red,
                             child: const Align(
                                 alignment: Alignment.centerRight,
-                                child: Icon(Icons.delete)),
+                                child: Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.white,
+                                )),
                           ),
                           child: UserCard(
                             user: user,

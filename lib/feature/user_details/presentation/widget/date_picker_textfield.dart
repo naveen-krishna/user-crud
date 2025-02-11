@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:product_listing/core/constants/app_colors.dart';
 import 'package:product_listing/core/constants/style_constants.dart';
+import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
 
 class DatePickerTextField extends StatefulWidget {
   final TextEditingController controller;
+  final bool endDate;
 
   final Function(DateTime)? onDateSelected;
 
@@ -12,6 +14,7 @@ class DatePickerTextField extends StatefulWidget {
     Key? key,
     required this.controller,
     this.onDateSelected,
+    required this.endDate,
   }) : super(key: key);
 
   @override
@@ -22,11 +25,23 @@ String seleted = 'Today';
 
 class _DatePickerTextFieldState extends State<DatePickerTextField> {
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    if (widget.endDate) {
+      seleted = 'No Date';
+    }
+    if (!widget.endDate) {
+      _selectedDate = DateTime.now();
+    }
+
+    super.initState();
+  }
+
   final DateFormat _dateFormat = DateFormat("d MMM yyyy");
 
   void _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now();
-    _selectedDate ??= initialDate;
 
     await showDialog<DateTime>(
       context: context,
@@ -56,14 +71,25 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
                       // Calendar with Month Navigation
                       SizedBox(
                         height: 300,
-                        child: CalendarDatePicker(
-                          key: calendarKey,
-                          initialDate: _selectedDate ?? initialDate,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2100),
-                          onDateChanged: (date) {
-                            setDialogState(() => _selectedDate = date);
-                          },
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: const ColorScheme.light(
+                              primary: Colors.blue, //Selected date color
+                              onPrimary: Colors.white, //txt color on selected
+                              onSurface: Colors.black, //Default text color
+                            ),
+                          ),
+                          child: CalendarDatePicker(
+                            key: calendarKey,
+                            initialDate: _selectedDate,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                            onDateChanged: (date) {
+                              print(
+                                  "${widget.controller.text}   :: ondatechanged widget.controller.text $_selectedDate next");
+                              setDialogState(() => _selectedDate = date);
+                            },
+                          ),
                         ),
                       ),
 
@@ -79,12 +105,18 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
                                 color: AppColors.color_1DA1F2,
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                _selectedDate != null
-                                    ? _dateFormat.format(_selectedDate!)
-                                    : _dateFormat.format(initialDate),
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                              if (widget.endDate && _selectedDate == null) ...[
+                                const Text(
+                                  "No Date",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ] else ...[
+                                Text(
+                                  _dateFormat
+                                      .format(_selectedDate ?? initialDate),
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ]
                             ],
                           ),
                           Row(
@@ -131,27 +163,34 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
         Row(
           spacing: 12.0,
           children: [
+            if (widget.endDate)
+              _buildButton("No Date", null, setDialogState, forceRebuild),
             _buildButton("Today", DateTime.now(), setDialogState, forceRebuild),
-            _buildButton("Next Monday", _nextWeekday(DateTime.monday),
-                setDialogState, forceRebuild),
+            if (!widget.endDate)
+              _buildButton("Next Monday", _nextWeekday(DateTime.monday),
+                  setDialogState, forceRebuild),
           ],
         ),
-        Row(
-          spacing: 12.0,
-          children: [
-            _buildButton("Next Tuesday", _nextWeekday(DateTime.tuesday),
-                setDialogState, forceRebuild),
-            _buildButton("After 1 week", DateTime.now().add(Duration(days: 7)),
-                setDialogState, forceRebuild),
-          ],
-        ),
+        if (!widget.endDate)
+          Row(
+            spacing: 12.0,
+            children: [
+              _buildButton("Next Tuesday", _nextWeekday(DateTime.tuesday),
+                  setDialogState, forceRebuild),
+              _buildButton(
+                  "After 1 week",
+                  DateTime.now().add(Duration(days: 7)),
+                  setDialogState,
+                  forceRebuild),
+            ],
+          ),
       ],
     );
   }
 
   Widget _buildButton(
       String text,
-      DateTime date,
+      DateTime? date,
       void Function(void Function()) setDialogState,
       VoidCallback forceRebuild) {
     return Expanded(
@@ -194,7 +233,7 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
           Icons.today_outlined,
           color: AppColors.color_1DA1F2,
         ),
-        hintText: "Select Date",
+        hintText: widget.endDate ? "No Date" : "Today",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
           borderSide: const BorderSide(color: AppColors.color_E5E5E5),

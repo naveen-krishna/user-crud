@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:product_listing/core/di/injection_container.dart';
 import 'package:product_listing/feature/home/data/models/user_model.dart';
@@ -15,6 +16,11 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
 
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.blue,
+    statusBarIconBrightness: Brightness.light,
+  ));
+
   runApp(const MyApp());
 }
 
@@ -25,9 +31,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.lightBlue,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.lightBlue,
-        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+        ),
       ),
       home: const UserListPage(),
     );

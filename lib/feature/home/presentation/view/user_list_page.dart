@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_listing/core/di/injection_container.dart';
 import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
@@ -13,20 +14,24 @@ class UserListPage extends StatefulWidget {
 
 class _UserListPageState extends State<UserListPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       key: const Key("HomeScaffoldGestureDetector"),
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: BlocProvider(
-            create: (context) => HomeBloc(
-              getUsersDataUsecase: sl(),
-              deleteUserDataUsecase: sl(),
-            ),
-            child: const UserListScreen(),
+        body: BlocProvider(
+          create: (context) => HomeBloc(
+            getUsersDataUsecase: sl(),
+            deleteUserDataUsecase: sl(),
           ),
+          child: const UserListScreen(),
         ),
       ),
     );

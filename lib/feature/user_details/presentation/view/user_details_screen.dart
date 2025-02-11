@@ -132,10 +132,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 children: [
                   Expanded(
                     child: DatePickerTextField(
-                      controller: userDetailsBloc.dateController,
+                      controller: userDetailsBloc.startDateController,
                       onDateSelected: (date) {
                         print("Selected Date: ${date.toIso8601String()}");
                       },
+                      endDate: false,
                     ),
                   ),
                   const Padding(
@@ -147,10 +148,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   ),
                   Expanded(
                     child: DatePickerTextField(
-                      controller: userDetailsBloc.dateController,
+                      controller: userDetailsBloc.endDateController,
                       onDateSelected: (date) {
                         print("Selected Date: ${date.toIso8601String()}");
                       },
+                      endDate: true,
                     ),
                   ),
                 ],
