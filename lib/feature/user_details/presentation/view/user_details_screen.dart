@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_listing/core/constants/app_colors.dart';
 import 'package:product_listing/core/constants/style_constants.dart';
+import 'package:product_listing/core/date_extension.dart';
 import 'package:product_listing/feature/home/domain/entities/user_entity.dart';
 import 'package:product_listing/feature/user_details/presentation/bloc/user_details_bloc.dart';
 import 'package:product_listing/feature/user_details/presentation/widget/date_picker_textfield.dart';
@@ -143,8 +144,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 children: [
                   Expanded(
                     child: DatePickerTextField(
-                      controller: userDetailsBloc.startDateController,
+                      // controller: userDetailsBloc.startDateController,
                       onDateSelected: (date) {
+                        userDetailsBloc.startDateController.text =
+                            date.formatDateOnTextField();
+                        userDetailsBloc.endDateController.text = "";
                         print("Selected Date: ${date.toIso8601String()}");
                       },
                       endDate: false,
@@ -159,9 +163,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   ),
                   Expanded(
                     child: DatePickerTextField(
-                      controller: userDetailsBloc.endDateController,
+                      // controller: userDetailsBloc.endDateController,
                       onDateSelected: (date) {
                         print("Selected Date: ${date.toIso8601String()}");
+
+                        userDetailsBloc.endDateController.text =
+                            date.formatDateOnTextField();
                       },
                       endDate: true,
                     ),

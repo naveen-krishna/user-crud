@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:product_listing/core/constants/app_colors.dart';
 import 'package:product_listing/core/constants/style_constants.dart';
+import 'package:product_listing/core/date_extension.dart';
 import 'package:product_listing/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:product_listing/feature/user_details/presentation/bloc/user_details_bloc.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DatePickerTextField extends StatefulWidget {
-  final TextEditingController controller;
+  // final TextEditingController controller;
   final bool endDate;
 
   final Function(DateTime)? onDateSelected;
 
   const DatePickerTextField({
     Key? key,
-    required this.controller,
+    // required this.controller,
     this.onDateSelected,
     required this.endDate,
   }) : super(key: key);
@@ -26,6 +30,7 @@ String seleted = 'Today';
 class _DatePickerTextFieldState extends State<DatePickerTextField> {
   DateTime? _selectedDate;
 
+  UserDetailsBloc get userDetailsBloc => context.read<UserDetailsBloc>();
   @override
   void initState() {
     if (widget.endDate) {
@@ -86,7 +91,7 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
                             lastDate: DateTime(2100),
                             onDateChanged: (date) {
                               print(
-                                  "${widget.controller.text}   :: ondatechanged widget.controller.text $_selectedDate next");
+                                  "${_getController().text}   :: ondatechanged widget.controller.text $_selectedDate next");
                               setDialogState(() => _selectedDate = date);
                             },
                           ),
@@ -217,15 +222,32 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
   }
 
   void _setDate(DateTime date) {
-    String formattedDate = _dateFormat.format(date);
-    widget.controller.text = formattedDate;
-    widget.onDateSelected?.call(date);
+    bool showToast = false;
+    if (widget.endDate) {
+      DateTime startDateTime = DateTime.now();
+      if (userDetailsBloc.startDateController.text.isEmpty) {
+        startDateTime = DateTime.now();
+      } else {
+        startDateTime =
+            userDetailsBloc.startDateController.text.getDateFromTextField();
+      }
+      if (date.isBefore(startDateTime)) {
+        showToast = true;
+      }
+    }
+    if (showToast) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Please select end date after start date')));
+    } else {
+      String formattedDate = _dateFormat.format(date);
+      widget.onDateSelected?.call(date);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: widget.controller,
+      controller: _getController(),
       readOnly: true,
       onTap: () => _selectDate(context),
       decoration: InputDecoration(
@@ -249,4 +271,8 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
       ),
     );
   }
+
+  TextEditingController _getController() => widget.endDate
+      ? userDetailsBloc.endDateController
+      : userDetailsBloc.startDateController;
 }

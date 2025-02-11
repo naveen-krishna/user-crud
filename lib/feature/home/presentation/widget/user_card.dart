@@ -42,13 +42,21 @@ class UserCard extends StatelessWidget {
                       color: Colors.grey,
                     ),
                   ),
-                  Text(
-                    "From ${user?.startDate ?? ''}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  user!.endDate?.isEmpty ?? true
+                      ? Text(
+                          "From ${user?.startDate ?? ''}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : Text(
+                          "${user?.startDate ?? ''} - ${user?.endDate ?? ''}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
                   const SizedBox(),
                 ],
               ),
